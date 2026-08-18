@@ -135,4 +135,4 @@ The "save()" method writes all tasks to "tasks.json" using "TaskEncoder". The en
 
 Key Insight
 
-The task completion process is handled across several components rather than in one place. "TaskManager" coordinates the operation, "Task" performs the state changes, and "TaskStorage" handles persistence. This separation makes it easier to understand which component is responsible for each part of the process.
+The task completion process is handled across several components rather than in one place. "TaskManager" coordinates the operation, "Task" performs the state changes, and "TaskStorage" handles persistence. This separation makes it easier to understand which component is responsible for each part of the process
