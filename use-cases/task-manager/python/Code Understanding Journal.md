@@ -135,4 +135,70 @@ The "save()" method writes all tasks to "tasks.json" using "TaskEncoder". The en
 
 Key Insight
 
-The task completion process is handled across several components rather than in one place. "TaskManager" coordinates the operation, "Task" performs the state changes, and "TaskStorage" handles persistence. This separation makes it easier to understand which component is responsible for each part of the process
+The task completion process is handled across several components rather than in one place. "TaskManager" coordinates the operation, "Task" performs the state changes, and "TaskStorage" handles persistence. This separation makes it easier to understand which component is responsible for each part of the process.
+
+Part 4 Codebase Exploration Challenge — Presentation
+
+Good morning everyone.
+
+For this exercise, I explored a Python task management application to understand how the code works without making changes to it.
+
+1. High-Level Application Architecture
+
+The application is divided into different components, with each component having a specific responsibility.
+
+The "models.py" file contains the main task model and defines task priorities and statuses.
+
+The "app.py" file contains the "TaskManager", which coordinates actions such as creating tasks, updating tasks, changing priorities, and completing tasks.
+
+The "storage.py" file handles saving and loading tasks using a JSON file called "tasks.json".
+
+This separation helped me understand how the different parts of the application work together.
+
+2. Task Creation
+
+When a task is created, the "TaskManager" receives information such as the title, description, priority, due date, and tags.
+
+A "Task" object is then created in "models.py". Each task receives a unique ID, a default status of TODO, a creation time, and a priority.
+
+The task is then passed to "TaskStorage", which stores it and saves the information to "tasks.json".
+
+3. Task Prioritization
+
+The application has four priority levels: LOW, MEDIUM, HIGH, and URGENT.
+
+A new task has MEDIUM priority by default, but the priority can be changed later.
+
+One important thing I discovered was that the application does not automatically sort tasks from URGENT to LOW. Instead, it can filter tasks by a selected priority and count tasks according to their priority.
+
+This corrected my initial assumption about how prioritization worked.
+
+4. Task Completion
+
+When a task is marked as complete, "TaskManager.update_task_status()" finds the task and calls "mark_as_done()".
+
+The task's status changes to DONE. The application also records the completion time in "completed_at" and updates "updated_at".
+
+The changes are then saved to "tasks.json".
+
+5. Interesting Design Approach
+
+One interesting approach I discovered was the separation of responsibilities between the classes.
+
+"TaskManager" coordinates operations, "Task" manages the task's state, and "TaskStorage" handles persistence.
+
+The application also uses an encoder and decoder to convert task objects and dates to and from JSON. This makes it possible to save the tasks and load them again later.
+
+6. What I Found Challenging
+
+The most challenging part was understanding how the different files worked together.
+
+At first, I thought that task priority meant that urgent tasks would automatically appear before lower-priority tasks. By examining the code and following the guided questions, I discovered that priority is used mainly for assigning, updating, filtering, and counting tasks.
+
+The prompts helped me because they gave me questions to investigate instead of simply giving me an answer. This encouraged me to look at the code myself and compare my initial understanding with what the code actually does.
+
+Conclusion
+
+Overall, this exercise taught me that understanding an existing codebase is not only about reading individual lines of code. It is also about following the flow of data between different components and checking whether my assumptions are supported by the code.
+
+Thank you.
