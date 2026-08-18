@@ -193,3 +193,57 @@ sort_tasks_by_importance() orders tasks.
 get_top_priority_tasks() limits the results.
 This makes each function responsible for a specific part of the process.
 
+
+## Reflection Questions
+
+### 1. How did the AI's explanation change my understanding?
+
+Initially, I thought the algorithm simply sorted tasks according to their priority level.
+
+After examining the algorithm, I learned that it uses a weighted scoring system. Priority is only one factor. Due dates, task status, important tags, and recent updates can all affect the final score.
+
+This helped me understand that a task's importance is calculated dynamically rather than being determined by priority alone.
+
+### 2. What was still difficult to understand?
+
+The most difficult part was understanding how all the score adjustments interact with each other.
+
+For example, a task can have a high priority but lose many points if it is already marked as DONE. Similarly, an overdue task can receive a large score increase.
+
+I also had to pay attention to the exact number of points added or removed by each condition.
+
+### 3. How would I explain this algorithm to another junior developer?
+
+I would explain it as a points system for deciding which tasks deserve the most attention.
+
+Each task starts with points based on its priority. The algorithm then adds points if the task is due soon, overdue, has an important tag, or was recently updated.
+
+It removes points when the task is completed or in review.
+
+After calculating the score for every task, the application puts the tasks in order from the highest score to the lowest score.
+
+### 4. Did I test my understanding against AI?
+
+Yes. I used AI to break the algorithm into smaller sections and explain what each function does.
+
+I compared the explanation with the actual Python code, especially the conditions inside `calculate_task_score()`.
+
+This helped me confirm that my understanding matched the implementation.
+
+### 5. How might I improve the algorithm?
+
+One possible improvement would be to make the scoring weights configurable rather than hard-coded.
+
+For example, the application could store the priority and due-date weights in configuration so that they can be changed without modifying the algorithm.
+
+I would also consider adding automated tests for different combinations of priority, due dates, status, and tags.
+
+Another improvement would be to make the scoring rules easier to understand and document because the current algorithm contains several different adjustments.
+
+### Final Understanding
+
+The algorithm is a weighted task-ranking system.
+
+It calculates an importance score for every task using multiple factors, sorts the tasks by that score, and can return only the highest-ranking tasks.
+
+The most important lesson I learned is that understanding an algorithm requires looking at both the individual conditions and how those conditions combine to produce the final result.
