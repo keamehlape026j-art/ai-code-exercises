@@ -57,3 +57,27 @@ This separation makes it easier to understand which part of the application is r
 Key understanding
 
 The main thing I learned is that creating or updating a task involves several components rather than one function. The CLI starts the process, TaskManager coordinates it, the Task object represents the data and behaviour, and TaskStorage makes sure the changes are persisted in "tasks.json".
+
+## Part 2: Task Prioritization
+
+### Initial Understanding
+
+I initially understood task prioritization as a system where tasks are given different priority levels and the most important tasks would automatically be placed before less important tasks.
+
+### What I Discovered
+
+After examining `models.py`, `app.py`, and `storage.py`, I discovered that the task manager has four priority levels: LOW, MEDIUM, HIGH, and URGENT. A new task has MEDIUM priority by default.
+
+The priority can be changed when creating a task or later using `update_task_priority()`. Tasks can also be filtered by a specific priority using `get_tasks_by_priority()`. The system also counts tasks according to their priority in the statistics function.
+
+However, the system does not automatically sort or reorder all tasks according to priority. The priority is stored as an enum value and is used for filtering and statistics.
+
+### Key Insights from the Guided Questions
+
+The guided questions helped me understand the difference between assigning a priority and actually sorting tasks by priority. I learned that the priority value is stored with the task and can be changed, filtered, and counted, but there is no code that automatically puts URGENT tasks before HIGH, MEDIUM, or LOW tasks.
+
+I also learned that the priority values are stored as numbers: LOW is 1, MEDIUM is 2, HIGH is 3, and URGENT is 4.
+
+### Misconceptions Clarified
+
+My main misconception was that assigning a higher priority would automatically cause the task to appear before lower-priority tasks. After examining the code, I discovered that this application does not implement automatic priority sorting. Priority is mainly used to describe, filter, update, store, and count tasks.
