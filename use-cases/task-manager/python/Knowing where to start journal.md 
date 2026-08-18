@@ -1,0 +1,40 @@
+Knowing Where to Start Journal
+
+Part 1: Understanding Project Structure
+
+Initial Understanding
+
+Before examining the code deeply, I looked at the file names and formed an initial understanding of the project structure.
+
+I think "app.py" contains the main task-management logic and coordinates the different operations.
+
+I think "cli.py" handles the command-line interface and allows a user to interact with the Task Manager.
+
+I think "models.py" defines the main data structures for the application, including tasks, priorities, and statuses.
+
+I think "storage.py" is responsible for storing, loading, and saving task information.
+
+The project appears to be written in Python because the files use the ".py" extension.
+
+Initial Technology and Architecture Guess
+
+My initial guess is that this is a Python application that uses a simple modular architecture. The application appears to separate the task model, application logic, command-line interface, and data storage into different files.
+
+I did not find a "requirements.txt" file in the Python project folder, so I cannot identify any external Python dependencies from that file.
+
+Main Components
+
+- "models.py" — Defines tasks, task priorities, and task statuses.
+- "app.py" — Contains the main task-management operations.
+- "cli.py" — Provides the command-line interface for interacting with the application.
+- "storage.py" — Handles task storage and persistence.
+- "tasks.json" — Stores task information when the application persists data.
+
+Questions for Further Investigation
+
+1. Which file is the main entry point when the application starts?
+2. How does the command-line interface communicate with the TaskManager?
+3. How do the different components communicate with each other?
+4. How are tasks stored and retrieved?
+5. Does the application use any external frameworks or libraries?
+6. What architectural pattern or design approach does the project use?
