@@ -82,6 +82,8 @@ I also learned that the priority values are stored as numbers: LOW is 1, MEDIUM 
 
 My main misconception was that assigning a higher priority would automatically cause the task to appear before lower-priority tasks. After examining the code, I discovered that this application does not implement automatic priority sorting. Priority is mainly used to describe, filter, update, store, and count tasks.
 
+
+
 Part 3: Mapping Data Flow and State Management
 
 Task Completion Data Flow
@@ -136,6 +138,7 @@ The "save()" method writes all tasks to "tasks.json" using "TaskEncoder". The en
 Key Insight
 
 The task completion process is handled across several components rather than in one place. "TaskManager" coordinates the operation, "Task" performs the state changes, and "TaskStorage" handles persistence. This separation makes it easier to understand which component is responsible for each part of the process.
+
 
 Part 4 Codebase Exploration Challenge — Presentation
 
