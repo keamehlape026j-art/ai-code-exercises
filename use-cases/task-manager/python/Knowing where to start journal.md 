@@ -185,3 +185,81 @@ My initial plan would be to follow the existing separation of responsibilities.
 The CLI would receive the export command and pass the request to the "TaskManager". The "TaskManager" would retrieve the tasks and coordinate the export. The storage layer would handle writing the resulting CSV data to a file.
 
 I would investigate the existing JSON persistence code further before implementing anything so that the new feature follows the project's existing design rather than creating a separate approach.
+
+Part 3: Understanding Domain Model
+
+Core Domain Entities
+
+The central domain entity is the "Task" class in "models.py".
+
+A Task represents a piece of work that the user wants to track. It contains information such as a title, description, priority, status, creation time, update time, due date, completion time, and tags.
+
+The application also defines two important enums:
+
+- "TaskStatus" — represents the current state of a task.
+- "TaskPriority" — represents the importance of a task.
+
+Domain Relationship Diagram
+
+                    ┌─────────────────┐
+                    │      Task       │
+                    └────────┬────────┘
+                             │
+             ┌───────────────┼────────────────┐
+             │               │                │
+             ↓               ↓                ↓
+       TaskStatus       TaskPriority        Tags
+       TODO             LOW                 labels
+       IN_PROGRESS      MEDIUM
+       REVIEW            HIGH
+       DONE              URGENT
+
+A Task has one status and one priority at a time. A Task can also have multiple tags.
+
+Business Logic
+
+The "Task" class contains important business behaviour.
+
+The "update()" method allows task attributes to be changed and updates the "updated_at" timestamp.
+
+The "mark_as_done()" method changes the task status to "DONE", records the completion time in "completed_at", and updates "updated_at".
+
+The "is_overdue()" method determines whether a task is overdue. A task is considered overdue when it has a due date that is earlier than the current time and its status is not "DONE".
+
+Initial Questions
+
+Before examining the model more deeply, I had questions about:
+
+1. Whether changing priority automatically changes task status.
+2. Whether a higher priority automatically causes a task to be processed first.
+3. What makes a task overdue.
+4. Which component is responsible for changing task state.
+5. How status and priority are stored when tasks are saved.
+
+Revised Understanding
+
+After examining the code, I learned that priority and status are separate concepts. Changing a task's priority does not automatically change its status.
+
+I also learned that priority does not automatically reorder tasks. It is used for assigning, filtering, and counting tasks.
+
+Task completion is handled by the "mark_as_done()" method, which changes the status and records completion information.
+
+Domain Glossary
+
+Term| Meaning
+Task| A piece of work tracked by the application
+TaskStatus| The current state of a task
+TODO| A task that has not started
+IN_PROGRESS| A task currently being worked on
+REVIEW| A task waiting for or undergoing review
+DONE| A completed task
+TaskPriority| The importance level assigned to a task
+LOW| Lowest priority level
+MEDIUM| Default priority level
+HIGH| High priority level
+URGENT| Highest priority level
+Due date| The date by which a task should be completed
+Tag| A label associated with a task
+completed_at| The date and time when a task was completed
+updated_at| The date and time when a task was last updated
+Overdue| A task whose due date has passed and which is not DONE
