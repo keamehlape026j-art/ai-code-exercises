@@ -186,6 +186,7 @@ The CLI would receive the export command and pass the request to the "TaskManage
 
 I would investigate the existing JSON persistence code further before implementing anything so that the new feature follows the project's existing design rather than creating a separate approach.
 
+
 Part 3: Understanding Domain Model
 
 Core Domain Entities
@@ -263,3 +264,127 @@ Tag| A label associated with a task
 completed_at| The date and time when a task was completed
 updated_at| The date and time when a task was last updated
 Overdue| A task whose due date has passed and which is not DONE
+Part 4: Practical Application
+
+Scenario
+
+The team needs to implement the following business rule:
+
+«Tasks that are overdue for more than 7 days should be automatically marked as abandoned unless they are marked as high priority.»
+
+Files That Would Need to Be Modified
+
+Based on my understanding of the codebase, the main files I would investigate or modify are:
+
+- "models.py" — to define the new "ABANDONED" task status and potentially add or update task-related business logic.
+- "app.py" — to implement the logic that checks overdue tasks and applies the new business rule.
+- "storage.py" — to retrieve and save tasks when their status changes. The existing "get_overdue_tasks()" and "save()" functionality could potentially be reused.
+- "cli.py" — only if the new status needs to be displayed, filtered, or managed through the command-line interface.
+
+Proposed Implementation
+
+I would first add an "ABANDONED" value to "TaskStatus".
+
+The application would then need to identify tasks whose due date was more than seven days before the current date.
+
+For each overdue task, the application would check its priority. If the task is HIGH priority or higher, it would remain unchanged. Otherwise, its status would be changed to "ABANDONED".
+
+The updated tasks would then be saved through "TaskStorage.save()" so that the changes persist in "tasks.json".
+
+A possible flow would be:
+
+Find overdue tasks
+       ↓
+Check how long they have been overdue
+       ↓
+More than 7 days overdue?
+       ↓
+Check priority
+    ↙       ↘
+High/Urgent   Lower priority
+    ↓              ↓
+Keep task       Mark ABANDONED
+                   ↓
+              Save changes
+
+Questions for the Team
+
+Before implementing the rule, I would ask:
+
+1. Should HIGH priority tasks be protected, or should only exactly HIGH priority be protected?
+2. Does URGENT priority also count as protected because it is higher than HIGH?
+3. Should a task become abandoned immediately when the application starts, or should this happen through a scheduled process?
+4. Should tasks without a due date ever become abandoned?
+5. Should completed tasks be excluded from the rule?
+6. Should users be able to manually change an ABANDONED task back to another status?
+7. Should the "ABANDONED" status be available through the CLI?
+8. Should the application record when a task became abandoned?
+
+Reflection on the AI Prompts
+
+The AI prompts helped me understand the codebase by encouraging me to investigate the project systematically instead of trying to understand every file at once.
+
+The Project Structure prompt helped me identify the responsibilities of the different files and understand the overall architecture.
+
+The Feature Location prompt helped me think about where a new feature should be placed based on existing functionality rather than creating an unrelated implementation.
+
+The Domain Understanding prompt helped me understand the "Task", "TaskStatus", and "TaskPriority" concepts and the business logic contained in the Task model.
+
+What I Am Still Unsure About
+
+I am still unsure about how the application would automatically check for tasks that have been overdue for more than seven days because the current code does not appear to contain a background scheduler or automatic process for this.
+
+I would also want to understand how the CLI is normally launched and whether there are tests or other files outside the Python folder.
+
+Next Steps
+
+My next steps would be to:
+
+1. Look for tests that demonstrate the expected behaviour of tasks.
+2. Check how the CLI application is launched.
+3. Investigate whether there is any scheduling or background processing.
+4. Confirm the business requirements with the team.
+5. Design the new status and overdue-checking logic before making code changes.
+6. Add tests for the new business rule before implementing it.
+
+Final Discussion and Personal Reflection
+
+My Approach
+
+My approach was to start with the project structure and file names before examining the code deeply.
+
+I then followed the flow between the CLI, application logic, domain model, and storage layer. This helped me understand how the components communicate with each other.
+
+Challenges
+
+One challenge was understanding which file was responsible for each part of the application. The prompts helped me break the problem into smaller questions and investigate each responsibility separately.
+
+Another challenge was distinguishing between what I initially assumed the application did and what the code actually does.
+
+For example, I initially thought task priority might automatically determine the order in which tasks appear, but the code showed that priority is mainly used for assigning, filtering, and counting tasks.
+
+Most Helpful Prompt
+
+The Understanding Domain Models and Business Concepts prompt was particularly helpful because it helped me understand the meaning and relationships between "Task", "TaskStatus", and "TaskPriority".
+
+The prompts were most useful when they guided me with questions rather than simply giving me an answer.
+
+What I Would Do Differently Next Time
+
+Next time I approach an unfamiliar codebase, I would start with the directory structure and entry points before reading individual functions.
+
+I would also write down my assumptions early and then test them against the actual code.
+
+Additional Tools and Resources
+
+AI prompting could be complemented by:
+
+- Repository search
+- Code navigation tools
+- Documentation
+- Unit tests
+- Git history and commit messages
+- Dependency and configuration files
+- Diagrams showing data flow and component relationships
+
+Using these resources together would provide a more complete understanding of an unfamiliar codebase.
