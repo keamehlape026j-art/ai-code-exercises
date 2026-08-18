@@ -81,3 +81,58 @@ I also learned that the priority values are stored as numbers: LOW is 1, MEDIUM 
 ### Misconceptions Clarified
 
 My main misconception was that assigning a higher priority would automatically cause the task to appear before lower-priority tasks. After examining the code, I discovered that this application does not implement automatic priority sorting. Priority is mainly used to describe, filter, update, store, and count tasks.
+
+Part 3: Mapping Data Flow and State Management
+
+Task Completion Data Flow
+
+The data flow when a task is marked as complete is:
+
+User marks task as DONE
+        ↓
+TaskManager.update_task_status()
+        ↓
+TaskStorage.get_task(task_id)
+        ↓
+Task.mark_as_done()
+        ↓
+Status changes to DONE
+        ↓
+completed_at is set to current time
+        ↓
+updated_at is set to completion time
+        ↓
+TaskStorage.save()
+        ↓
+TaskEncoder converts the task to JSON
+        ↓
+tasks.json is updated
+
+State Changes
+
+When a task is marked as complete, the following state changes occur:
+
+1. The task's status changes from its previous status to "TaskStatus.DONE".
+2. "completed_at" is set to the current date and time.
+3. "updated_at" is set to the same completion time.
+4. The updated task is saved to the JSON storage file.
+
+Potential Points of Failure
+
+There are several possible points where the process could fail:
+
+- An invalid task ID could mean that the task cannot be found.
+- An invalid status value could cause the "TaskStatus" conversion to fail.
+- The task storage file may not be available or writable.
+- Saving the task to "tasks.json" could fail because of a file or storage error.
+- The JSON encoding process could fail if unexpected data is present.
+
+How the Application Persists Changes
+
+The application retrieves the task from "TaskStorage" and calls "mark_as_done()" to change its state. It then calls "storage.save()".
+
+The "save()" method writes all tasks to "tasks.json" using "TaskEncoder". The encoder converts the task's status to its string value and converts datetime values such as "completed_at" and "updated_at" into ISO-format strings. This allows the completed state to be stored and loaded again later.
+
+Key Insight
+
+The task completion process is handled across several components rather than in one place. "TaskManager" coordinates the operation, "Task" performs the state changes, and "TaskStorage" handles persistence. This separation makes it easier to understand which component is responsible for each part of the process.
