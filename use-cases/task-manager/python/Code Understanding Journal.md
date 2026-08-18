@@ -1,0 +1,59 @@
+Code Understanding Journal
+
+Part 1: Understanding a Specific Feature
+
+Feature explored
+
+Task creation and task status updates.
+
+Main components involved
+
+The main components involved are "cli.py", "TaskManager", "Task", "TaskStorage", "TaskEncoder", "TaskDecoder", "TaskStatus", and "TaskPriority".
+
+"cli.py" handles commands entered by the user. "TaskManager" coordinates task operations. "Task" represents an individual task and contains its state and behaviour. "TaskStorage" handles storing and retrieving tasks. "TaskEncoder" and "TaskDecoder" handle conversion between Python task objects and JSON data.
+
+Task creation flow
+
+When a user creates a task, the command is received by "cli.py". The CLI calls "TaskManager.create_task()". The TaskManager converts the priority and due date and creates a new "Task" object.
+
+The "Task" object receives a unique ID, starts with a "TODO" status, and records its creation and update times. The task is then passed to "TaskStorage.add_task()". The task is added to the in-memory dictionary and saved to "tasks.json".
+
+The flow is:
+
+User → "cli.py" → "TaskManager.create_task()" → "Task" → "TaskStorage.add_task()" → "save()" → "tasks.json".
+
+Status update flow
+
+When a task status is changed, "cli.py" calls "TaskManager.update_task_status()".
+
+For statuses other than "DONE", the TaskManager calls "TaskStorage.update_task()", which updates the task and saves the changes.
+
+When the new status is "DONE", the TaskManager retrieves the task using "get_task()", calls "task.mark_as_done()", and then saves the changes.
+
+The completion flow is:
+
+User → "cli.py" → "TaskManager.update_task_status()" → "TaskStorage.get_task()" → "Task.mark_as_done()" → "TaskStorage.save()" → "tasks.json".
+
+What happens when a task is completed?
+
+The "mark_as_done()" method changes the task status to "DONE". It also records the current time in "completed_at" and updates "updated_at" to the same time.
+
+This means the application records both the completion state and the time when the task was completed.
+
+How data is stored and retrieved
+
+Tasks are stored in memory using the "self.tasks" dictionary in "TaskStorage".
+
+The tasks are permanently stored in "tasks.json". "TaskEncoder" converts Python task objects into JSON-compatible data, including converting datetime values into ISO-format strings.
+
+When the application starts, "TaskStorage.load()" reads the JSON file. "TaskDecoder" converts the stored data back into "Task" objects and places them into the in-memory dictionary.
+
+Interesting design approach
+
+An interesting design approach is the separation of responsibilities. The CLI handles user commands, TaskManager coordinates operations, Task handles task state and behaviour, and TaskStorage handles persistence.
+
+This separation makes it easier to understand which part of the application is responsible for each operation.
+
+Key understanding
+
+The main thing I learned is that creating or updating a task involves several components rather than one function. The CLI starts the process, TaskManager coordinates it, the Task object represents the data and behaviour, and TaskStorage makes sure the changes are persisted in "tasks.json".
