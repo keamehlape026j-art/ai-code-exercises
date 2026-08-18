@@ -1,3 +1,4 @@
+
 Knowing Where to Start Journal
 
 Part 1: Understanding Project Structure
@@ -116,3 +117,70 @@ My main misconception was that "app.py" might be the main entry point of the app
 I also learned that the project does not appear to use an external framework. It mainly relies on Python's standard library.
 
 The most important insight was understanding how the files work together rather than looking at each file independently.
+
+Part 2: Finding Feature Implementation
+
+Feature Request
+
+The hypothetical feature requested by the team lead is:
+
+Task Export to CSV
+
+The goal is to understand where this feature would fit in the existing codebase before making any changes.
+
+Initial Search
+
+I searched for existing functionality related to:
+
+- "export"
+- "file"
+- "save"
+- "load"
+- "json"
+- "get_all_tasks"
+- "Encoder"
+- "Decoder"
+- "storage"
+
+The most relevant file was "storage.py" because it already handles reading and writing task data to a file.
+
+Existing Related Functionality
+
+"storage.py" contains the "load()" and "save()" methods that handle persistence using "tasks.json".
+
+The "TaskEncoder" converts Task objects into JSON-compatible data, while "TaskDecoder" converts stored JSON data back into Task objects.
+
+The "get_all_tasks()" method provides access to all tasks stored in memory.
+
+"app.py" contains the "TaskManager", which coordinates task-related operations.
+
+"cli.py" provides the command-line interface through which users interact with the application.
+
+Initial Hypothesis
+
+My initial hypothesis is that CSV export would involve multiple components.
+
+The application-level export operation could be placed in "app.py" because "TaskManager" coordinates task operations.
+
+The file-writing functionality could be handled by "storage.py", since this component already deals with persistence and file operations.
+
+A new "export" command could be added to "cli.py" so that users can request a CSV export from the command line.
+
+The existing "get_all_tasks()" method could be reused to obtain the tasks that need to be exported.
+
+Related Components
+
+The components that would potentially be affected are:
+
+- "cli.py" — to add a command for exporting tasks.
+- "app.py" — to coordinate the export operation.
+- "storage.py" — to handle CSV file creation or file-writing functionality.
+- "models.py" — probably would not need to change because it already contains the task data that needs to be exported.
+
+Feature Location Plan
+
+My initial plan would be to follow the existing separation of responsibilities.
+
+The CLI would receive the export command and pass the request to the "TaskManager". The "TaskManager" would retrieve the tasks and coordinate the export. The storage layer would handle writing the resulting CSV data to a file.
+
+I would investigate the existing JSON persistence code further before implementing anything so that the new feature follows the project's existing design rather than creating a separate approach.
